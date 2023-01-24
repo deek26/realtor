@@ -19,7 +19,7 @@ function App() {
         <Route path="/offers" element={<Offers />} />
         <Route path="/sign-in" element={<Signin />} />
         <Route path="/sign-up" element={<Signup/>} />
-        <Route path="/ForgotPassword" element={<ForgotPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
     </>

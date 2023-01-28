@@ -2,10 +2,30 @@ import React from 'react'
 import { useState } from 'react'
 import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import Button from '../components/Button'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from 'react-router-dom'
 
 export default function Signin() {
   const [showPassword, setshowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate=useNavigate()
+  
+
+  async function onSubmit(e){
+    e.preventDefault()
+    try {
+      const auth = getAuth();
+      const userCredential=await signInWithEmailAndPassword(auth, email, password)
+      const user=userCredential.user
+      toast.success("Signin successful")
+      navigate('/')
+    } catch (error) {
+      toast.error("Invalid Credential")
+    }
+  }
   return (
     <section>
       <h1 className='text-3xl font-bold text-center py-6'>
@@ -20,13 +40,14 @@ export default function Signin() {
         </div>
 
         <div className='mx-auto md:mt-6 lg:w-[40%] lg:ml-20 '>
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               type='email'
               className='w-full rounded-md h-8 border-gray-300 border-2 
               my-1 px-5 py-6 text-lg focus:border-blue-500 focus:outline-none 
               transition ease-in-out duration-300'
               placeholder='Email Address'
+              onChange={(e)=>setEmail(e.target.value)}
             />
             <div className='my-6 relative'>
             <input
@@ -35,6 +56,7 @@ export default function Signin() {
               my-1 px-5 py-6 text-lg focus:border-blue-500 focus:outline-none 
               transition ease-in-out duration-300'
               placeholder='Password'
+              onChange={(e)=>setPassword(e.target.value)}
             />
             {showPassword?(
               <AiFillEye 
@@ -62,7 +84,7 @@ export default function Signin() {
                 <p className='font-semibold mx-3'>OR</p>
               </div>
 
-              <Button title="Continue With Google" back="bg-red-500" pic="FcGoogle" />
+              <Button type='button' click={true} title="Continue With Google" back="bg-red-500" pic="FcGoogle" />
               
           </form>
         </div>

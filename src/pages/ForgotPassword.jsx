@@ -1,9 +1,23 @@
 import React from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import Button from '../components/Button'
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 export default function ForgotPassword() {
+  const [email,setEmail]=useState('')
+
+  async function onSubmit(e){
+    e.preventDefault()
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email)
+      toast.success("Reset Email Sent Successfuly Please Check your Email")
+    } catch (error) {
+      toast.error("This Email Is Not Registered")
+    }
+  }
   
   return (
     <section>
@@ -19,13 +33,14 @@ export default function ForgotPassword() {
         </div>
 
         <div className='mx-auto md:mt-6 lg:w-[40%] lg:ml-20 '>
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               type='email'
               className='w-full rounded-md h-8 border-gray-300 border-2 
               my-1 px-5 py-6 text-lg focus:border-blue-500 focus:outline-none 
               transition ease-in-out duration-300'
               placeholder='Email Address'
+              onChange={(e)=>setEmail(e.target.value)}
             />
             
               <div className='flex justify-between'>
@@ -42,7 +57,7 @@ export default function ForgotPassword() {
                 <p className='font-semibold mx-3'>OR</p>
               </div>
 
-              <Button title="Continue With Google" back="bg-red-500" pic="FcGoogle" />
+              <Button type='button' click={true} title="Continue With Google" back="bg-red-500" pic="FcGoogle" />
               
           </form>
         </div>
